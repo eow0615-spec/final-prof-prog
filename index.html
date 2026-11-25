@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Profitable Progress</title>
+<style>
+:root{--bg:#fff;--card:#f4f4f2;--text:#111;--muted:#666;--line:#ddd;--gold:#c9a227;--up:#1a9e5c;--down:#d6453d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--card:#141414;--text:#f5f5f5;--muted:#999;--line:#2a2a2a;--gold:#d4af37;--up:#2fc07a;--down:#ec5a52}}
+:root[data-theme="dark"]{--bg:#000;--card:#141414;--text:#f5f5f5;--muted:#999;--line:#2a2a2a;--gold:#d4af37;--up:#2fc07a;--down:#ec5a52}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#app{max-width:430px;margin:0 auto;padding:12px 16px 120px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-weight:700}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f1d77a,var(--gold));color:#000;font-weight:800;display:grid;place-items:center}
+h2{margin:6px 0 10px;font-size:21px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--gold)}
+.row{display:flex;align-items:center;gap:12px}
+.chk{width:24px;height:24px;border-radius:7px;border:2px solid var(--gold);display:grid;place-items:center;flex:none;font-size:14px;color:#000}
+.on .chk{background:var(--gold)}.on .nm{text-decoration:line-through;color:var(--muted)}
+button{font:inherit;cursor:pointer;color:inherit}
+.btn{background:var(--gold);color:#000;border:0;border-radius:12px;padding:12px 16px;font-weight:700;width:100%}
+.btn.o{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.up{background:var(--up)}.btn.dn{background:var(--down)}
+.btn:disabled{opacity:.4;cursor:default}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.muted{color:var(--muted);font-size:14px}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:6px 12px;margin:0 6px 6px 0;font-size:14px;color:var(--muted)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);display:flex;justify-content:space-around;align-items:flex-end;background:var(--bg);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{background:none;border:0;color:var(--muted);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;width:76px}
+nav button span{font-size:22px}nav button.act{color:var(--gold)}
+nav .cam span{width:64px;height:64px;border-radius:50%;background:var(--gold);color:#000;display:grid;place-items:center;margin-top:-30px;border:4px solid var(--bg);font-size:26px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.vf{height:190px;border-radius:16px;background:#0a0a0a;position:relative;overflow:hidden;margin-bottom:10px}
+.vf::after{content:"";position:absolute;left:10%;right:10%;height:2px;background:var(--gold);animation:sc 2s linear infinite alternate}
+@keyframes sc{from{top:20%}to{top:80%}}
+@media (prefers-reduced-motion:reduce){.vf::after{animation:none;top:50%}}
+.vf b{position:absolute;width:26px;height:26px;border:3px solid var(--gold)}
+.vf b:nth-child(1){top:14px;left:14px;border-right:0;border-bottom:0}.vf b:nth-child(2){top:14px;right:14px;border-left:0;border-bottom:0}
+.vf b:nth-child(3){bottom:14px;left:14px;border-right:0;border-top:0}.vf b:nth-child(4){bottom:14px;right:14px;border-left:0;border-top:0}
+input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;margin-bottom:8px}
+ul{padding-left:20px;margin:8px 0}li{margin-bottom:6px}
+svg{width:100%;height:auto;display:block}
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px}
+.wk button{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 0;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.wk button.sel{border-color:var(--gold);color:var(--gold);font-weight:700}
+.wk i{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.wk i[hidden]{display:block;visibility:hidden}
+.ex{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.ex input{margin:0;width:auto;min-width:0;flex:2}.ex input+input{flex:1}
+.x{background:none;border:0;color:var(--down);font-size:20px;padding:4px 8px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:12px}
+.seg button{background:none;border:0;border-radius:9px;padding:8px;font-size:13px;font-weight:600;color:var(--muted)}.seg button.sel{background:var(--gold);color:#000}
+.cb{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.cb button{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-size:14px}.cb button.sel{border-color:var(--gold);color:var(--gold);font-weight:700}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0 4px}.g4 input{margin:0;padding:10px 8px}
+</style></head>
+<body>
+<div id="app">
+<div class="top"><div class="logo">P</div>Profitable Progress</div>
+<main id="screen"></main>
+</div>
+<nav>
+<button data-t="fit" onclick="go('fit')"><span>💪</span>Fitness</button>
+<button data-t="cam" class="cam" onclick="go('cam')"><span>📷</span>Camera</button>
+<button data-t="psy" onclick="go('psy')"><span>🧘</span>Psyche</button>
+</nav>
+<script>
+const $=q=>document.querySelector(q);
+const S={tab:'fit',view:null,sel:(new Date().getDay()+6)%7,edit:0,rt:"07:00",note:"",cn:0,fs:"w",pm:"",goal:"lean",eq:["bw","db"],dpw:"4",log:[],lm:"",gw:"",sw:"",ps:0,am:"",pm:"",at:"06:30",bt:"22:00",aon:1,bon:1,fv:[],rot:0,lq:"",lc:"st",an:"",dt:"",pd:{},p:{age:"",ft:"",inch:"",lb:"",sex:"M",act:"1.375"},sc:null,food:"",wk:"",fc:"All"};
+const DN=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const R=[{name:"Push day",ex:[{n:"Bench Press",s:"4 × 8"},{n:"Incline Dumbbell Press",s:"3 × 10"},{n:"Overhead Press",s:"3 × 8"},{n:"Triceps Pushdown",s:"3 × 12"}]},null,{name:"Pull day",ex:[{n:"Pull-ups",s:"4 × 8"},{n:"Barbell Row",s:"3 × 10"},{n:"Biceps Curl",s:"3 × 12"}]},null,{name:"Leg day",ex:[{n:"Squat",s:"4 × 6"},{n:"Romanian Deadlift",s:"3 × 8"},{n:"Calf Raise",s:"4 × 15"}]},null,null];
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const F={'Apple':95,'Banana':105,'Egg':78,'Chicken breast (100 g)':165,'White rice (1 cup)':205,'Oatmeal (1 cup)':154,'Pizza slice':285,'Avocado':240,'Brown rice (1 cup)':215,'Pasta, cooked (1 cup)':220,'Bread slice, white':75,'Bread slice, whole wheat':80,'Bagel':280,'Flour tortilla':140,'Cereal (1 cup)':150,'Pancakes (2 medium)':190,'Waffle':220,'Quinoa, cooked (1 cup)':222,'Granola bar':120,'Orange':62,'Strawberries (1 cup)':50,'Blueberries (1 cup)':85,'Grapes (1 cup)':100,'Watermelon (1 cup)':46,'Pineapple (1 cup)':82,'Mango (1 cup)':100,'Peach':60,'Pear':100,'Raisins (1/4 cup)':130,'Broccoli (1 cup)':55,'Carrots (1 cup)':50,'Spinach, raw (1 cup)':7,'Sweet potato':112,'Baked potato':160,'Corn on the cob':90,'Green beans (1 cup)':31,'Side salad, no dressing':30,'Egg whites (3)':51,'Chicken thigh (100 g)':209,'Ground beef 85% (100 g)':215,'Sirloin steak (100 g)':206,'Salmon (100 g)':208,'Tuna, canned (1 can)':120,'Shrimp (100 g)':99,'Pork chop (100 g)':231,'Bacon (2 slices)':90,'Turkey deli meat (3 oz)':90,'Tofu (100 g)':76,'Protein shake (1 scoop)':120,'Greek yogurt, plain (1 cup)':130,'Flavored yogurt (1 cup)':150,'Milk, whole (1 cup)':150,'Milk, 2% (1 cup)':120,'Chocolate milk (1 cup)':190,'Cheddar cheese (1 slice)':113,'Mozzarella (1 oz)':85,'Cottage cheese (1/2 cup)':90,'Butter (1 tbsp)':102,'Ice cream (1/2 cup)':140,'Cheeseburger':300,'Hamburger':250,'French fries (medium)':365,'Chicken nuggets (6)':280,'Hot dog with bun':290,'Chicken burrito':500,'Taco':170,'Sub sandwich (6 in)':400,'Peanut butter and jelly sandwich':380,'Grilled cheese sandwich':400,'Mac and cheese (1 cup)':310,'Fried chicken (1 piece)':320,'Sushi roll (6 pieces)':250,'Ramen, instant (1 pack)':380,'Lasagna (1 slice)':330,'Potato chips (1 oz)':150,'Popcorn, air-popped (3 cups)':90,'Peanut butter (2 tbsp)':190,'Almonds (1 oz)':165,'Peanuts (1 oz)':165,'Trail mix (1/4 cup)':175,'Cookie':150,'Brownie':240,'Donut':250,'Chocolate bar':230,'Crackers (5)':80,'Pretzels (1 oz)':110,'Hummus (2 tbsp)':70,'Water':0,'Black coffee':2,'Latte (12 oz)':150,'Orange juice (1 cup)':110,'Soda (12 oz)':140,'Beer (12 oz)':150,'Wine (5 oz)':125,'Energy drink (16 oz)':200,'Sports drink (20 oz)':130,'Smoothie (16 oz)':250,'Olive oil (1 tbsp)':120,'Mayonnaise (1 tbsp)':94,'Ketchup (1 tbsp)':20,'Honey (1 tbsp)':64,'Sugar (1 tsp)':16,'Jelly (1 tbsp)':50,'Ranch dressing (2 tbsp)':130,'Maple syrup (2 tbsp)':110};
+window.go=t=>{S.tab=t;S.view=null;S.dt='';draw();scrollTo(0,0)};
+function draw(){
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("act",b.dataset.t===S.tab));
+ ({fit,cam,psy:psyT}[S.tab])();save()}
+function wk(){
+ const td=(new Date().getDay()+6)%7,tw=R[td],w=tw?tw.ex.filter(x=>x.d).length:0,tot=tw?tw.ex.length:0,r=R[S.sel],E=S.edit;
+ const days=DN.filter((d,i)=>R[i]).join(", ")||"none yet";
+ let b;
+ if(!r)b=`<div class="card"><b>Rest day</b><p class="muted">No workout planned for ${DN[S.sel]}. Rest is part of progress.</p><button class="btn" onclick="R[S.sel]={name:'New workout',ex:[]};S.edit=1;draw()">Add a workout for ${DN[S.sel]}</button></div>`;
+ else if(E)b=`<input value="${esc(r.name)}" oninput="R[S.sel].name=this.value" aria-label="Workout name">`+r.ex.map((x,i)=>`<div class="ex"><input value="${esc(x.n)}" placeholder="Exercise" oninput="R[S.sel].ex[${i}].n=this.value"><input value="${esc(x.s)}" placeholder="3 × 10" oninput="R[S.sel].ex[${i}].s=this.value"><button class="x" aria-label="Remove exercise" onclick="R[S.sel].ex.splice(${i},1);draw()">✕</button></div>`).join("")+`<button class="btn o" onclick="R[S.sel].ex.push({n:'',s:'3 × 10'});draw()">＋ Add exercise</button><button class="btn o" style="margin-top:8px;color:var(--down)" onclick="R[S.sel]=null;draw()">Make ${DN[S.sel]} a rest day</button>`;
+ else{const d=r.ex.filter(x=>x.d).length;b=`<h2>${esc(r.name)}</h2>`+(r.ex.map((x,i)=>`<div class="card row ${x.d?"on":""}" onclick="R[S.sel].ex[${i}].d^=1;draw()"><div class="chk">${x.d?"✓":""}</div><div style="flex:1"><div class="nm"><b>${esc(x.n)||"Unnamed exercise"}</b></div><div class="muted">${esc(x.s)}</div></div></div>`).join("")||'<p class="muted">No exercises yet. Tap Edit to add some.</p>')+`<div class="bar"><i style="width:${r.ex.length?d/r.ex.length*100:0}%"></i></div><p class="muted">${r.ex.length&&d==r.ex.length?"Workout complete. Nice work.":"Tap an exercise to check it off."}</p>`}
+ return `<div class="row" style="justify-content:space-between"><h2 style="margin:6px 0">My routine</h2><button class="btn o" style="width:auto;padding:6px 16px" onclick="S.edit^=1;draw()">${E?"Done":"Edit"}</button></div>
+ <div class="card row" style="justify-content:space-between"><span>Today</span><span class="muted">${tot?`Workouts ${w}/${tot}`:"Rest day"}</span></div>
+ <div class="wk">${DN.map((d,i)=>`<button class="${i==S.sel?"sel":""}" onclick="S.sel=${i};draw()">${d}<i ${R[i]?"":"hidden"}></i></button>`).join("")}</div>
+ ${b}
+ ${S.note?`<div class="card" style="border-color:var(--gold);margin-top:12px">🔔 <b>Profitable Progress</b><div style="white-space:pre-line">${esc(S.note)}</div></div>`:""}
+ <div class="card" style="margin-top:12px"><div class="row" style="justify-content:space-between"><span>⏰ Workout reminder</span><input type="time" value="${S.rt}" style="width:auto;margin:0" oninput="S.rt=this.value"></div><div class="muted" style="margin:8px 0">You get a notification at this time on your workout days: ${days}.</div><button class="btn o" onclick="pv()">Preview notification</button></div>`}
+const GL=[['lean','Lean'],['bulk','Bulk'],['maintain','Maintain']];
+const AC=[['1.2','Mostly sitting'],['1.375','Light'],['1.55','Moderate'],['1.725','Very active']];
+const EQ=[['bw','Bodyweight'],['db','Dumbbells'],['bb','Barbell'],['mc','Machines'],['bd','Bands'],['pu','Pull-up bar'],['kb','Kettlebell']];
+const L={chest:[['Barbell Bench Press','bb'],['Dumbbell Bench Press','db'],['Machine Chest Press','mc'],['Push-ups','bw'],['Band Chest Press','bd']],
+chest2:[['Incline Dumbbell Press','db'],['Pec Deck Machine','mc'],['Feet-elevated Push-ups','bw'],['Band Chest Fly','bd']],
+shoulder:[['Barbell Overhead Press','bb'],['Dumbbell Shoulder Press','db'],['Machine Shoulder Press','mc'],['Pike Push-ups','bw'],['Band Shoulder Press','bd']],
+tri:[['Triceps Pushdown','mc'],['Overhead Triceps Extension','db'],['Band Pushdown','bd'],['Bench Dips','bw']],
+back:[['Barbell Row','bb'],['One-arm Dumbbell Row','db'],['Seated Cable Row','mc'],['Band Row','bd'],['Inverted Row (sturdy table)','bw']],
+vert:[['Pull-ups','pu'],['Lat Pulldown','mc'],['Band Lat Pulldown','bd'],['Dumbbell Pullover','db'],['Superman Pulls','bw']],
+bi:[['Barbell Curl','bb'],['Dumbbell Curl','db'],['Cable Curl','mc'],['Band Curl','bd'],['Chin-ups','pu']],
+quad:[['Barbell Squat','bb'],['Leg Press','mc'],['Goblet Squat','db'],['Kettlebell Goblet Squat','kb'],['Bodyweight Squat','bw']],
+hinge:[['Romanian Deadlift','bb'],['Dumbbell Romanian Deadlift','db'],['Kettlebell Swing','kb'],['Leg Curl Machine','mc'],['Band Pull-through','bd'],['Glute Bridge','bw']],
+lunge:[['Dumbbell Walking Lunges','db'],['Reverse Lunges','bw']],
+calf:[['Seated Calf Raise Machine','mc'],['Standing Calf Raise','bw']],
+core:[['Hanging Knee Raise','pu'],['Plank','bw'],['Crunches','bw']]};
+const T={FB:['quad','chest','back','hinge','shoulder','core'],UP:['chest','back','shoulder','vert','bi','tri'],LO:['quad','hinge','lunge','calf','core'],PU:['chest','chest2','shoulder','tri'],PL:['back','vert','bi','core']};
+const SC={3:[[0,'Full body','FB',0],[2,'Full body','FB',1],[4,'Full body','FB',0]],4:[[0,'Upper body','UP',0],[1,'Lower body','LO',0],[3,'Upper body','UP',1],[4,'Lower body','LO',1]],5:[[0,'Push day','PU',0],[1,'Pull day','PL',0],[2,'Leg day','LO',0],[3,'Upper body','UP',1],[4,'Lower body','LO',1]]};
+const cb=(items,on,f)=>`<div class="cb">${items.map(x=>`<button class="${on(x[0])?'sel':''}" onclick="${f(x[0])}">${x[1]}</button>`).join('')}</div>`;
+window.sv=(k,v)=>{S[k]=v;draw()};window.sp=(k,v)=>{S.p[k]=v;draw()};
+window.te=k=>{const i=S.eq.indexOf(k);i<0?S.eq.push(k):S.eq.splice(i,1);draw()};
+window.addF=k=>{S.log.push({n:k,c:F[k]});S.lm=k+' added to today’s calories.';cam()};
+window.ml=()=>{const n=$('#mn').value.trim()||'Food',c=+$('#mc').value;if(c>0)S.log.push({n,c:Math.round(c)});draw()};
+window.blank=()=>{R.splice(0,7,...Array(7).fill(null));S.fs='w';S.sel=0;S.edit=0;S.pm='Blank week ready. Tap a day, then add your own workout.';draw()};
+window.gen=()=>{
+ const av=e=>e=='bw'||S.eq.includes(e),wkk=Array(7).fill(null);
+ SC[S.dpw].forEach(([d,name,tp,off])=>{
+  const ex=T[tp].map((c,i)=>{const a=L[c].filter(x=>av(x[1]));if(!a.length)return null;const x=a[off%a.length];
+   const s=x[0]=='Plank'?'3 × 30-45 s':x[1]=='bw'?'3 × 10-20':S.goal=='bulk'?(i?'3 × 8-12':'4 × 6-8'):S.goal=='lean'?(i?'3 × 12-15':'3 × 10-12'):(i?'3 × 10-12':'3 × 8-10');
+   return {n:x[0],s}}).filter(Boolean);
+  if(S.goal=='lean')ex.push({n:'Cardio: brisk walk or bike',s:'15 min'});
+  wkk[d]={name,ex}});
+ R.splice(0,7,...wkk);S.fs='w';S.edit=0;S.sel=wkk.findIndex(Boolean);
+ S.pm='Your plan is ready: '+S.dpw+' days a week, built for '+GL.find(x=>x[0]==S.goal)[1].toLowerCase()+'. Tap a day to view it, or Edit to change anything.';draw()};
+function tgt(){const p=S.p,a=+p.age,h=(+p.ft)*12+(+p.inch||0),w=+p.lb;if(!(a>0&&h>0&&w>0))return null;
+ const m=Math.round((10*w*.45359+6.25*h*2.54-5*a+({M:5,F:-161,O:-78}[p.sex]))*(+p.act)/10)*10,fl={M:1500,F:1200,O:1350}[p.sex];let c=m,note='';
+ if(S.goal=='lean'){if(a<18){note='Under 18: your body is still growing, so this stays at maintenance. Talk with a doctor before cutting calories.'}else{const lb=w,gw=+S.gw,wk=+S.wk;let d=500,tw=0;if(gw>0&&gw<lb&&wk>0){d=(lb-gw)*3500/(wk*7);tw=1}
+  const d2=Math.min(d,1000);c=Math.max(m-d2,fl);if(m-d2<fl)note='Held at a safe minimum so you still get enough fuel.';
+  if(tw){const u=m-c;if(u>0){const w2=Math.ceil((lb-gw)*3500/(u*7));note=(note?note+' ':'')+(d>u+10?'That timeframe is faster than is safe. At a safe pace you would reach '+gw+' lb in about '+w2+' weeks.':'On pace: about '+Math.round(u)+' cal/day deficit to lose '+Math.round((lb-gw)*10)/10+' lb in '+wk+' weeks.')}}}}
+ if(S.goal=='bulk')c=m+300;
+ return{m,c:Math.round(c/10)*10,pr:Math.round(w*.8),note}}
+function plan(){return `<div class="card"><b>✨ Create my plan</b><p class="muted">Pick your equipment, goal and days. We build your whole week.</p>
+<div class="muted">Equipment you have</div>${cb(EQ,k=>k=='bw'||S.eq.includes(k),k=>`te('${k}')`)}
+<div class="muted">Goal</div>${cb(GL,k=>S.goal==k,k=>`sv('goal','${k}')`)}
+<div class="muted">Days per week</div>${cb([['3','3 days'],['4','4 days'],['5','5 days']],k=>S.dpw==k,k=>`sv('dpw','${k}')`)}
+<button class="btn" onclick="gen()">Generate my plan</button></div>
+<div class="card"><b>🛠️ Build my own</b><p class="muted">Start with an empty week and add your own workouts and exercises.</p><button class="btn o" onclick="blank()">Start from scratch</button></div>`}
+function cal(){
+ const p=S.p,t=tgt(),e=S.log.reduce((a,x)=>a+x.c,0);
+ let h=`<div class="card"><b>Your numbers</b><div class="g4"><input type="number" inputmode="numeric" placeholder="Age" aria-label="Age" value="${esc(p.age)}" oninput="S.p.age=this.value"><input type="number" inputmode="numeric" placeholder="ft" aria-label="Height feet" value="${esc(p.ft)}" oninput="S.p.ft=this.value"><input type="number" inputmode="numeric" placeholder="in" aria-label="Height inches" value="${esc(p.inch)}" oninput="S.p.inch=this.value"><input type="number" inputmode="numeric" placeholder="lb" aria-label="Weight in pounds" value="${esc(p.lb)}" oninput="S.p.lb=this.value"></div><div class="muted">Age · Height (ft, in) · Weight (lb)</div>
+<div class="muted" style="margin-top:8px">Goal weight (lb)</div><input type="number" inputmode="numeric" placeholder="Goal weight" aria-label="Goal weight in pounds" value="${esc(S.gw)}" oninput="S.gw=this.value">
+<div class="muted" style="margin-top:8px">Gender (used in the calorie formula)</div>${cb([['M','Male'],['F','Female'],['O','Other']],k=>p.sex==k,k=>`sp('sex','${k}')`)}
+<div class="muted">Activity</div>${cb(AC,k=>p.act==k,k=>`sp('act','${k}')`)}
+<div class="muted">Goal</div>${cb(GL,k=>S.goal==k,k=>`sv('goal','${k}')`)}${S.goal=='lean'?`<div class="muted" style="margin-top:8px">How long do you want to take? (needs a goal weight above)</div>${cb([['3','3 weeks'],['4','4 weeks'],['8','2 months'],['12','3 months']],k=>S.wk==k,k=>`sv('wk','${k}')`)}<input type="number" inputmode="numeric" placeholder="Or type the number of weeks" aria-label="Weeks" value="${esc(S.wk)}" oninput="S.wk=this.value">`:''}
+<button class="btn" onclick="draw()">Calculate</button></div>`;
+ if(t)h+=`<div class="card"><div class="muted">Daily calorie target (${GL.find(x=>x[0]==S.goal)[1]})</div><div style="font-size:32px;font-weight:800;color:var(--gold)">${t.c} cal</div><div class="muted">Maintenance ≈ ${t.m} cal · Protein goal ≈ ${t.pr} g</div>${t.note?`<p class="muted">${t.note}</p>`:''}<div class="muted">Estimate only, not medical advice.</div></div>`;
+ const left=t?t.c-e:0;
+ if(!S.sw&&+p.lb>0)S.sw=p.lb;
+ if(+S.gw>0&&+p.lb>0){const cur=+p.lb,g=+S.gw,s=+S.sw||cur,done=s==g?1:Math.max(0,Math.min(1,(cur-s)/(g-s))),hit=(g>=s&&cur>=g)||(g<=s&&cur<=g);
+  h+=`<div class="card" id="gwc"><b>🎯 Goal weight: ${g} lb</b><div class="row" style="justify-content:space-between;margin-top:6px"><span>Now ${cur} lb</span><span class="muted">${hit?'Goal reached!':Math.abs(cur-g).toFixed(1)+' lb to go'}</span></div><div class="bar"><i style="width:${done*100}%"></i></div><div class="ex" style="margin-top:12px"><input id="wl" type="number" inputmode="decimal" placeholder="Log today’s weight (lb)"><button class="btn" style="width:auto;padding:10px 14px" onclick="uw()">Update</button></div></div>`}
+ h+=`<div class="card" id="tc"><b>Today’s calories</b><div class="row" style="justify-content:space-between;margin-top:6px"><span>${e} eaten</span><span class="muted">${t?(left>=0?left+' left':-left+' over'):'Enter your numbers above'}</span></div><div class="bar"><i style="width:${t?Math.min(100,e/t.c*100):0}%"></i></div>
+${S.log.map((x,i)=>`<div class="row" style="justify-content:space-between;margin-top:10px"><span>${esc(x.n)}</span><span>${x.c} cal <button class="x" aria-label="Remove" onclick="S.log.splice(${i},1);draw()">✕</button></span></div>`).join('')}
+<div class="ex" style="margin-top:12px"><input id="mn" placeholder="Food (like lunch)"><input id="mc" type="number" inputmode="numeric" placeholder="Calories"><button class="btn" style="width:auto;padding:10px 14px" onclick="ml()">Add</button></div>
+<div class="muted">Tip: search foods on the 📷 Camera tab and add them here.</div></div>`;
+ return h}
+window.uw=()=>{const v=+$('#wl').value;if(v>0)S.p.lb=String(v);draw()};
+const P={
+st:`Neck side tilt;Neck forward tilt;Neck rotation;Chin tuck;Levator scapulae stretch;Upper trap stretch;Neck half circles;Assisted ear-to-shoulder;Shoulder rolls;Shoulder shrugs and drops;Cross-body shoulder stretch;Doorway chest stretch;Behind-the-back shoulder stretch;Reverse prayer;Eagle arms;Cow face arms;Wall angel;Thread the needle;Overhead triceps stretch;Sleeper shoulder stretch;
+Wrist flexor stretch;Wrist extensor stretch;Prayer stretch;Reverse prayer wrist stretch;Finger spreads;Finger pulls;Thumb stretch;Wrist circles;Forearm wall stretch;Biceps wall stretch;Tabletop wrist rocks;Elbow circles;Fist clench and release;Towel wrist twist;
+Cat-cow;Child's pose reach;Cobra stretch;Sphinx stretch;Seated spinal twist;Supine spinal twist;Standing side bend;Seated side bend;Standing backbend;Standing forward fold;Rag doll;Seated forward fold;Cat stretch;Thoracic extension over chair;Open book twist;Lying knee-to-chest;Double knees to chest;Rocking ball;Spinal roll-down;Wall chest opener;Prone press-up;Quadruped thoracic rotation;Puppy stretch;Cow stretch;Standing cat-cow;Pelvic tilts;
+Figure four;Seated figure four;Pigeon stretch;Reclined pigeon;Butterfly stretch;Frog stretch;90/90 hip stretch;Low lunge;Kneeling hip flexor stretch;Couch stretch;Happy baby stretch;Cradle stretch;Seated hip rotation;Standing hip circles;Deep squat opener;Lizard lunge;Cossack squat;Side lunge stretch;Garland squat hold;Supine hip abductor stretch;Lying glute stretch;Standing IT band cross stretch;Wide-legged forward fold;Hip airplane;
+Standing quad stretch;Lying quad stretch;Seated hamstring stretch;Standing hamstring stretch;Strap hamstring stretch;Standing toe touch;Runner's lunge;Calf wall stretch;Downward dog pedal;Soleus stretch;Towel calf stretch;Adductor stretch;Wide-knee child's pose;Side-lying quad stretch;Heel-prop hamstring stretch;Half split;Kneeling hamstring stretch;Step calf stretch;Hamstring floss;Kneeling shin stretch;Tibialis stretch;Standing figure four;Seated straddle;Seated wide-leg reach;Single-leg forward fold;Doorway hamstring stretch;Forward leg swings;Side leg swings;
+Ankle circles;Toe spreads;Plantar fascia stretch;Toe curls;Foot roll with ball;Heel raises;Toe pulls;Ankle alphabet;Seated ankle flex and point;Toe squat;Foot massage;Slow calf raises;
+Cat-cow flow;Standing full-body reach;Overhead reach and side bend;Windmill arms;Forward arm circles;Backward arm circles;Torso twists;Hip circles;World's greatest stretch;Inchworm;Walkout to plank;Spider lunge;Lunge with twist;Standing sun reach;Bear crawl hold;Dynamic hamstring sweep;Good mornings;Hip hinge reach;Side-to-side lunges;Standing figure eight;Cross crawl;Standing knee hugs;Heel-to-butt walk;Reach and roll;Lying full-body stretch;Star stretch;Hug and open;Shake out arms and legs;Deep squat reach;Standing wrist-to-ankle reach`,
+yg:`+Mountain pose;+Sun salutation A;+Sun salutation B;+Sun salutation C;+Half sun salutation;+Moon salutation;+Chair pose;+Warrior I;+Warrior II;+Warrior III;+Reverse warrior;+Humble warrior;+Crescent lunge;+High lunge;+Triangle pose;+Extended side angle;+Half moon;+Tree pose;+Eagle pose;+Dancer pose;+Lord of the dance;+Plank pose;+Four-limbed staff;+Upward-facing dog;+Three-legged dog;+Boat pose;+Bridge pose;+Wheel prep;+Camel pose;+Locust pose;+Bow pose;+Cobra pose;+Crow pose;+Side crow;+Firefly prep;+Star pose;+Goddess pose;+Standing split;+Garland flow;
+Downward-facing dog;Cat pose;Cow pose;Child's pose;Sphinx pose;Puppy pose;Seated forward bend;Standing forward bend;Half forward bend;Intense side stretch;Easy seat;Staff pose;Chair cat-cow;Chair twist;Chair forward fold;Chair eagle arms;Chair pigeon;Chair side bend;Chair warrior;Chair mountain;Chair shoulder opener;Chair spinal roll;
+-Extended child's pose;-Supported child's pose;-Thread the needle pose;-Head-to-knee pose;-Wide-legged forward bend;-Pyramid pose;-Happy baby pose;-Reclining bound angle;-Reclining hero;-Reclining twist;-Supine spinal twist pose;-Legs up the wall;-Supported bridge;-Fish pose;-Supported fish;-Corpse pose;-Butterfly pose;-Cobbler's pose;-Lotus pose;-Hero pose;-Thunderbolt pose;-Cow face pose;-Pigeon pose;-Sleeping pigeon;-Half pigeon;-Lizard pose;-Low lunge pose;-Dragon pose;-Frog pose;-Saddle pose;-Swan pose;-Sleeping swan;-Half lord of the fishes;-Marichi's pose;-Bharadvaja's twist;-Revolved triangle;-Revolved chair;-Revolved lunge;-Dolphin pose;-Knees-to-chest pose;-Wind-relieving pose;-Supine big toe pose;-Reclined hand-to-big-toe;-Constructive rest;-Waterfall pose;-Yin caterpillar;-Yin dragonfly;-Yin butterfly;-Yin shoelace;-Yin sphinx;-Yin seal;-Yin square;-Yin toe squat;-Yin banana;-Yin deer;-Yin melting heart;-Bolster twist;-Bolster backbend;-Supported forward fold;-Yoga nidra pose`,
+br:`Box breathing:4-4-4-4;Easy box breathing:3-3-3-3;Slow box breathing:5-5-5-5;Deep box breathing:6-6-6-6;-4-7-8 breathing:4-7-8-0;-4-4-8 breathing:4-4-8-0;-4-2-6 breathing:4-2-6-0;Coherent breathing:5-0-5-0;Resonance breathing:6-0-6-0;-Slow 4-6 breathing:4-0-6-0;-Extended exhale 4-8:4-0-8-0;-Extended exhale 3-6:3-0-6-0;-Extended exhale 5-10:5-0-10-0;Triangle breathing 4:4-4-4-0;Triangle breathing 3:3-3-3-0;Pursed-lip breathing:2-0-4-0;Belly breathing:4-0-6-0;Diaphragmatic breathing:4-2-6-0;Three-part breath:4-0-6-0;Ocean breath:4-0-6-0;-Humming bee breath:4-0-8-0;Alternate nostril breathing:4-4-4-0;Easy alternate nostril:4-0-4-0;+Lion's breath:4-0-4-0;Equal breathing:4-0-4-0;+Equal breathing 3:3-0-3-0;-Physiological sigh:3-0-6-0;-Cooling breath:4-0-6-0;-Straw breath:4-0-6-0;Counting breath:4-0-4-0;Natural breath awareness:4-0-4-0;Heart-focused breathing:5-0-5-0;Wave breath:5-0-5-0;Golden thread breath:4-0-6-0;+Arm-raise breathing:4-0-4-0;+Wake-up breath:3-0-3-0;+Energizing nostril breath:3-0-3-0;+Sun breath:4-0-4-0;-Moon breath:4-0-6-0;-Gratitude breath:4-0-6-0;Smile breath:4-0-4-0;-Candle breath:4-0-8-0;-Balloon breath:4-0-6-0;Rainbow breath:5-0-5-0;Hand-on-chest breathing:4-0-6-0;-5-4-3-2-1 grounding breath:4-0-6-0;-Backward counting breath:4-0-6-0;-Body-scan breath:4-0-6-0;-Sleepy breath:4-7-8-0;+Morning stretch breath:4-0-4-0;+Sunrise breath:5-0-5-0;-Sunset breath:4-0-8-0;-Pillow breathing:4-0-6-0`,
+ml:`+Intention for the day;+Visualize your best day;+Gratitude for three things;+Sunrise visualization;+Energy body scan;+Morning affirmations;+Set one priority;+Smile meditation;+Mountain meditation;+Awakening the senses;+Morning loving-kindness;+Future self visualization;+Confidence meditation;+Focus candle gaze;
+Mindful breathing;Counting breaths to ten;Open awareness;Noting thoughts;Loving-kindness;Compassion for yourself;Sound meditation;Mantra repetition;Walking meditation;Mindful eating;Five senses grounding;Body awareness;Mindful stretching;Non-judgment practice;Letting go of thoughts;Cloud watching;Stream of thoughts;Breath at the nostrils;Breath at the belly;Soften the face;Relax the jaw;Hand awareness;Feet awareness;Mindful listening;Single-point focus;Thought labeling;Choiceless awareness;Body-mind check-in;Emotion naming;RAIN practice;Mindful pause;Mindful doorway;Compassionate touch;Tension check;Spacious mind;
+-Full body scan;-Progressive muscle relaxation;-Yoga nidra;-Gratitude for today;-Release the day;-Letting go of worries;-Worry download;-Sleep body scan;-Beach visualization;-Forest visualization;-Rain visualization;-Lake visualization;-Mountain cabin visualization;-Starry sky visualization;-Slow counting backward;-Heavy limbs meditation;-Warm light meditation;-Golden light healing;-Safe place visualization;-Peaceful garden walk;-Floating on a cloud;-Ocean waves;-Candle flame fade;-Blessings for loved ones;-Forgiveness meditation;-Evening loving-kindness;-Three good things;-Tomorrow can wait;-Quiet mind scan;-Sinking into the bed;-Pillow of clouds;-Lullaby humming;-Soften and sink;-Unclench meditation;-Yawn and sigh;-Relaxing the eyes;-Slow breath sleep count;-Rest in silence;-Letting the day dissolve;-Night sky stillness;-Moonlight meditation;-Soothing sounds;-Rhythmic tapping calm;-Mantra: peace;-Mantra: let go;-Dream intention;-Shoulders melt;-Heavy eyelids;-Warm hands;-Cool pillow`};
+const LB=[];Object.keys(P).forEach(k=>P[k].split(';').map(s=>s.trim()).filter(Boolean).forEach(s=>{let w='',n=s,pt='';if(n[0]=='+'||n[0]=='-'){w=n[0];n=n.slice(1)}if(k=='br')[n,pt]=n.split(':');LB.push({id:k+LB.length,u:LB.length,k,n,w,pt})}));
+const LBL={st:'Stretch',yg:'Yoga',br:'Breathing',ml:'Meditation'},TM=[['5','5 min'],['10','10 min'],['15','15 min'],['20','20 min'],['30','30 min'],['45','45 min']];
+const FV=id=>S.fv.includes(id),mn=x=>x.k=='br'?2:x.k=='ml'?3:1,tm=s=>{const a=s.split(':');return +a[0]*60+ +a[1]},fm=t=>{t=((t%1440)+1440)%1440;const h=Math.floor(t/60),m=t%60;return (h%12||12)+':'+String(m).padStart(2,'0')+(h<12?' AM':' PM')};
+function cue(x){if(x.k=='br'){const[a,b,c,d]=x.pt.split('-');return 'In '+a+(+b?' · Hold '+b:'')+' · Out '+c+(+d?' · Hold '+d:'')+' · 2 min. Stop if dizzy.'}return x.k=='ml'?'Follow the prompt for 3 minutes.':x.k=='yg'?'Hold 5 slow breaths each side.':'Hold 30-45 s each side. Breathe slowly.'}
+const rnd=(i,s)=>Math.abs(Math.sin(i*12.9898+s*78.233))*43758.5453%1;
+function pickN(k,w,n,seed){const srt=a=>a.map(x=>[rnd(x.u,seed),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]),fav=LB.filter(x=>x.k==k&&FV(x.id)),rest=LB.filter(x=>x.k==k&&!FV(x.id)&&(!x.w||x.w==w));return [...srt(fav).slice(0,Math.ceil(n/2)),...srt(rest)].slice(0,n)}
+function routine(m,w){const sd=Math.floor(Date.now()/864e5)+S.rot*97+(w=='+'?0:5000),nb=Math.max(1,Math.floor(m/10)),nm=m>=8?Math.max(1,Math.floor(m/12)):0,mv=Math.max(2,m-2*nb-3*nm),a=pickN('br',w,nb,sd),c=pickN('ml',w,nm,sd+1),s=pickN('st',w,Math.ceil(mv/2),sd+2),y=pickN('yg',w,Math.floor(mv/2),sd+3);return w=='+'?[...a,...s,...y,...c]:[...s,...y,...a,...c]}
+const li=x=>`<div class="row" style="justify-content:space-between;margin-top:10px"><div style="flex:1;cursor:pointer" onclick="op('${x.id}')"><b>${esc(x.n)}</b> <span class="muted">›</span><div class="muted">${LBL[x.k]} · ${cue(x)}</div></div><button class="x" style="color:var(--gold)" aria-label="Favorite" onclick="fv('${x.id}')">${FV(x.id)?'♥':'♡'}</button></div>`;
+window.fv=id=>{const i=S.fv.indexOf(id);i<0?S.fv.push(id):S.fv.splice(i,1);draw()};
+window.alm=w=>{S.an=w=='a'?'⏰ Good morning! Time for your '+S.am+'-minute routine: '+routine(+S.am,'+').slice(0,3).map(x=>x.n).join(', ')+'…':'🌙 Time to wind down. Your '+S.pm+'-minute routine starts now, then lights out.';draw()};
+window.lib=()=>{const q=S.lq.toLowerCase(),a=LB.filter(x=>x.k==S.lc&&x.n.toLowerCase().includes(q));$('#lib').innerHTML=(a.slice(0,30).map(li).join('')+(a.length>30?`<p class="muted">Showing 30 of ${a.length}. Type to narrow it down.</p>`:''))||'<p class="muted">No match.</p>'};
+function psy(){
+ if(!S.ps)return `<div class="card"><b>🧘 Let’s build your routine</b><p class="muted">How much time do you have in the morning?</p>${cb(TM,k=>S.am==k,k=>`sv('am','${k}')`)}<p class="muted">And at night, before bed?</p>${cb(TM,k=>S.pm==k,k=>`sv('pm','${k}')`)}<div class="g2"><div><div class="muted">Wake-up alarm</div><input type="time" value="${S.at}" oninput="S.at=this.value"></div><div><div class="muted">Bedtime</div><input type="time" value="${S.bt}" oninput="S.bt=this.value"></div></div><button class="btn" ${S.am&&S.pm?'':'disabled'} onclick="S.ps=1;draw()">Build my plan</button></div>`;
+ const td=S.pd[dk()]||{},am=routine(+S.am,'+'),pm=routine(+S.pm,'-'),fl=LB.filter(x=>FV(x.id)),tg=(k)=>`<button class="btn o" style="width:auto;padding:4px 12px" onclick="S.${k}^=1;draw()">${S[k]?'Alarm on':'Alarm off'}</button>`;
+ return (S.an?`<div class="card" style="border-color:var(--gold)">${esc(S.an)}</div>`:'')+stk()+
+ `<div class="card"><div class="row" style="justify-content:space-between"><b>☀️ Morning · ${S.am} min</b>${tg('aon')}</div><div class="row" style="justify-content:space-between;margin:8px 0"><span>⏰ Wake-up alarm</span><input type="time" style="width:auto;margin:0" value="${S.at}" oninput="S.at=this.value"></div><button class="btn o" onclick="alm('a')">Preview alarm</button>${am.map(li).join('')}<button class="btn" style="margin-top:12px" onclick="pdone('a')">${td.a?'✓ Morning done today':'Mark morning done'}</button></div>
+ <div class="card"><div class="row" style="justify-content:space-between"><b>🌙 Night · ${S.pm} min</b>${tg('bon')}</div><div class="row" style="justify-content:space-between;margin:8px 0"><span>😴 Go-to-sleep alarm</span><input type="time" style="width:auto;margin:0" value="${S.bt}" oninput="S.bt=this.value"></div><div class="muted" style="margin-bottom:8px">Wind-down starts at ${fm(tm(S.bt)-S.pm)}, lights out at ${fm(tm(S.bt))}.</div><button class="btn o" onclick="alm('b')">Preview alarm</button>${pm.map(li).join('')}<button class="btn" style="margin-top:12px" onclick="pdone('b')">${td.b?'✓ Night done today':'Mark night done'}</button></div>
+ <div class="g2"><button class="btn" onclick="S.rot++;draw()">🔀 Shuffle</button><button class="btn o" onclick="S.ps=0;draw()">Change my times</button></div>
+ ${fl.length?`<div class="card"><b>♥ Your favorites (${fl.length})</b>${fl.map(li).join('')}<div class="muted" style="margin-top:8px">Favorites show up in your routines first.</div></div>`:'<p class="muted">Tap ♡ on any exercise to favorite it. Favorites show up in your routines first.</p>'}
+ <div class="card"><b>📚 Library: ${LB.length} exercises</b>${cb(Object.keys(LBL).map(k=>[k,LBL[k]+' ('+LB.filter(x=>x.k==k).length+')']),k=>S.lc==k,k=>`sv('lc','${k}')`)}<input placeholder="Search" aria-label="Search exercises" value="${esc(S.lq)}" oninput="S.lq=this.value;lib()"><div id="lib"></div></div>`}
+const AR={stand:{h:[60,18],p:['60,26 60,70','60,36 40,14','60,36 80,14','60,70 50,108','60,70 70,108']},
+arms:{h:[60,18],p:['60,26 60,70','60,38 28,38','60,38 92,38','60,70 50,108','60,70 70,108']},
+lunge:{h:[50,22],p:['50,30 56,62','50,38 44,12','50,38 62,14','56,62 80,70 80,106','56,62 30,84 12,106']},
+fold:{h:[40,98],p:['70,108 70,58','70,58 46,90','56,76 44,104']},
+twist:{h:[60,48],p:['60,56 60,92','60,92 36,100 60,104','60,92 84,100 60,104','60,62 92,70','60,62 30,56']},
+seat:{h:[60,48],p:['60,56 60,92','60,92 36,100 60,104','60,92 84,100 60,104','60,64 42,86','60,64 78,86']},
+child:{h:[30,100],p:['84,88 40,98','84,88 84,102 60,106','46,98 12,106']},
+back:{h:[36,62],p:['110,100 60,96','60,96 42,74','50,86 46,102']},
+lie:{h:[16,98],p:['24,100 80,100','80,100 108,100','40,100 54,94','60,100 74,94']},
+balance:{h:[60,18],p:['60,26 60,70','60,36 52,12','60,36 68,12','60,70 60,108','60,70 86,86 62,92']},
+plank:{h:[22,66],p:['30,72 104,92','30,72 26,106','104,92 108,106']},
+dog:{h:[46,94],p:['24,108 62,46','62,46 100,108','52,70 40,100']}};
+const DS={stand:['An upright move that lengthens the spine and wakes up the whole body.','Stand tall with your feet about hip-width apart.|Move slowly into the shape, keeping your shoulders relaxed.|Hold for 30 to 60 seconds, breathing slowly through your nose.'],
+arms:['A gentle upper-body move that loosens the neck, shoulders, arms or wrists.','Sit or stand tall and relax your shoulders.|Move slowly into the stretch until you feel a mild pull, never pain.|Hold 20 to 30 seconds on each side, breathing slowly.'],
+lunge:['A lunge-based move that opens the hips and strengthens the legs.','Step one foot forward and bend that knee over your ankle.|Keep the back leg long and your chest tall.|Hold for 5 slow breaths, then switch sides.'],
+fold:['A forward-bending move that stretches the back of the legs and releases the back.','Stand or sit tall, then hinge forward from the hips.|Keep a soft bend in your knees and let your head hang heavy.|Hold for 5 slow breaths and rise up slowly.'],
+twist:['A gentle twist that mobilizes the spine and helps you wring out tension.','Sit tall and place one hand on the opposite knee.|Breathe in to lengthen, breathe out to rotate a little further.|Hold for 5 breaths, then twist the other way.'],
+child:['A resting, kneeling fold that calms the body and stretches the back and hips.','Kneel and sit your hips back toward your heels.|Fold forward and rest your forehead on the floor.|Reach your arms forward or rest them by your sides, and breathe slowly.'],
+back:['A gentle backbend that opens the chest and strengthens the back.','Get into position on your belly or back, as the move requires.|Lift your chest slowly, keeping your neck long.|Hold for 3 to 5 breaths and lower with control.'],
+lie:['A restful floor position that releases the back, hips and legs.','Lie on a mat or soft surface.|Let your legs and arms relax into the position.|Stay for 1 to 3 minutes, breathing slowly.'],
+balance:['A balancing move that builds focus, leg strength and stability.','Pick a spot to look at and ground through one foot.|Lift slowly into the shape, using a wall for support if you need it.|Hold for 5 breaths, then switch sides.'],
+plank:['A strong hold that builds core and shoulder strength.','Place your hands under your shoulders and extend your legs back.|Keep your body in one line and your core gently tight.|Hold for 5 to 10 breaths, or lower your knees to make it easier.'],
+dog:['An inverted-V shape that stretches the back, shoulders and legs.','Start on hands and knees and lift your hips up and back.|Press into your hands and keep your head between your arms.|Bend your knees if your back rounds, and hold for 5 breaths.'],
+seat:['A seated position that opens the hips and calms the mind.','Sit tall on the floor or a chair, resting on your sit bones.|Settle your legs into the position without forcing it.|Relax your shoulders and breathe slowly for 5 to 10 breaths.']};
+const BO=[['alternate','Use your right thumb to close the right nostril and breathe in through the left. Close the left with your ring finger, release the right, and breathe out. Switch sides each breath.'],['humming','Close your eyes, breathe in through your nose, then hum softly as you breathe out.'],['lion','Breathe in through your nose, then open your mouth wide and breathe out with a "haa" sound.'],['ocean','Slightly narrow the back of your throat so each breath sounds like soft ocean waves.'],['pursed','Breathe in through your nose, then breathe out slowly through lips shaped like you are blowing out a candle.'],['sigh','Breathe in through your nose, add a short second sip of air, then let out a long, slow sigh through your mouth.'],['straw','Shape your lips like a straw, breathe in cool air, and breathe out slowly through your nose.'],['cooling','Roll your tongue or shape your lips like a straw, breathe in cool air, and breathe out through your nose.'],['belly','Rest a hand on your belly. Let it rise as you breathe in and fall as you breathe out.'],['diaphragm','Rest a hand on your belly. Let it rise as you breathe in and fall as you breathe out.']];
+function arch(n){n=n.toLowerCase();const t=r=>new RegExp(r).test(n);
+ return t('tree|eagle pose|dancer|half moon|crow|boat|warrior iii|standing split|airplane|lord of the dance|firefly|star pose')?'balance':t('lunge|warrior|crescent|runner|spider|lizard|dragon|cossack|couch|goddess')?'lunge':t('twist|revolved|fishes|marichi|bharadvaja|open book|thread')?'twist':t('child|puppy|melting|rocking|frog|sleeping')?'child':t('dog|dolphin')?'dog':t('plank|bear|walkout|four-limbed|inchworm|cat|cow stretch|cow pose|tabletop')?'plank':t('forward|fold|toe touch|rag doll|caterpillar|half split|pyramid|intense|straddle|good morning|hinge|wide-leg|hamstring|toe squat')?'fold':t('cobra|sphinx|camel|bow|locust|bridge|wheel|backbend|upward|saddle|seal|press-up|fish|banana|deer')?'back':t('corpse|legs up|happy baby|reclin|supine|knees|wind-relieving|lying|waterfall|constructive|bolster|nidra|cradle|figure four')?'lie':t('seat|lotus|hero|butterfly|cobbler|staff|cow face|thunderbolt|easy|seated|garland|squat|pigeon|swan|prayer|chair')?'seat':t('neck|shoulder|arm|wrist|finger|chin|ear|elbow|thumb|forearm|biceps|triceps|windmill|hug|wall|doorway')?'arms':'stand'}
+window.op=id=>{S.dt=id;draw();scrollTo(0,0)};
+function det(){const x=LB.find(y=>y.id==S.dt);if(!x)return psy();let vis,desc,st;
+ if(x.k=='br'){const[a,b,c,d]=x.pt.split('-').map(Number),T=a+b+c+d,f=v=>(v/T*100).toFixed(1),o=BO.find(q=>x.n.toLowerCase().includes(q[0]));
+  vis=`<style>@keyframes bz{0%{transform:scale(.5)}${f(a)}%{transform:scale(1)}${f(a+b)}%{transform:scale(1)}${f(a+b+c)}%{transform:scale(.5)}100%{transform:scale(.5)}}.bc{animation:bz ${T}s ease-in-out infinite;transform-origin:60px 60px}@media(prefers-reduced-motion:reduce){.bc{animation:none}}</style><svg viewBox="0 0 120 120" role="img" aria-label="Breathing circle"><circle class="bc" cx="60" cy="60" r="52" style="fill:var(--gold);opacity:.8"/></svg><div class="muted" style="text-align:center">The circle grows as you breathe in and shrinks as you breathe out.</div>`;
+  desc=o?o[1]:'A paced breathing exercise that helps you slow down and settle your nervous system.';
+  st=['Sit or lie comfortably and relax your shoulders.','Follow the circle: in for '+a+' seconds'+(b?', hold '+b:'')+', out for '+c+' seconds'+(d?', hold '+d:'')+'.','Keep it gentle and repeat for about 2 minutes. Stop if you feel dizzy.']}
+ else if(x.k=='ml'){vis=`<style>@keyframes mz{0%,100%{transform:scale(.7)}50%{transform:scale(1)}}.bc{animation:mz 8s ease-in-out infinite;transform-origin:60px 60px}@media(prefers-reduced-motion:reduce){.bc{animation:none}}</style><svg viewBox="0 0 120 120" role="img" aria-label="Calm glowing circle"><circle class="bc" cx="60" cy="60" r="50" style="fill:var(--gold);opacity:.6"/><circle class="bc" cx="60" cy="60" r="28" style="fill:var(--gold)"/></svg>`;
+  desc='A guided mindfulness practice. Find a comfortable position, close your eyes, and let the prompt guide your attention for about 3 minutes.';
+  st=['Sit or lie down somewhere quiet.','Take three slow breaths.','Bring "'+x.n+'" to mind, and gently return to it whenever your attention wanders.','When time is up, take a deep breath and open your eyes slowly.']}
+ else{const a=arch(x.n),g=AR[a];vis=`<svg viewBox="0 0 120 120" role="img" aria-label="${esc(x.n)} illustration"><line x1="6" y1="110" x2="114" y2="110" stroke-width="2" style="stroke:var(--line)"/><circle cx="${g.h[0]}" cy="${g.h[1]}" r="8" style="fill:var(--gold)"/>${g.p.map(p=>`<polyline points="${p}" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--text)"/>`).join('')}</svg><div class="muted" style="text-align:center">Simple illustration of the general shape</div>`;desc=DS[a][0];st=DS[a][1].split('|')}
+ return `<button class="btn o" style="width:auto;padding:6px 14px" onclick="S.dt='';draw()">‹ Back</button><h2>${esc(x.n)}</h2><div class="muted">${LBL[x.k]} · ${x.w=='+'?'Energizing, great for mornings':x.w=='-'?'Calming, great before bed':'Good any time'}</div>
+ <div class="card" style="max-width:260px;margin:12px auto">${vis}</div>
+ <div class="card"><p style="margin-top:0">${esc(desc)}</p><b>How to do it</b><ol style="padding-left:20px;margin:8px 0">${st.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p class="muted" style="margin-bottom:0">Move slowly. Stop if you feel pain, and skip anything that doesn’t feel right for your body.</p></div>
+ <button class="btn" onclick="fv('${x.id}')">${FV(x.id)?'♥ Favorited':'♡ Add to favorites'}</button>`}
+const dk=d=>{d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const dAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d};
+const okd=k=>{const v=S.pd[k];return !!(v&&(v.a||v.b))};
+window.pdone=w=>{const k=dk(),v=S.pd[k]=S.pd[k]||{};v[w]=v[w]?0:1;draw()};
+function stk(){let n=0,i=okd(dk())?0:1;while(okd(dk(dAgo(i)))){n++;i++}
+ const ks=Object.keys(S.pd).filter(okd).sort();let best=0,run=0,prev=null;
+ ks.forEach(k=>{const t=new Date(k+'T00:00:00');run=prev&&Math.round((t-prev)/864e5)==1?run+1:1;prev=t;best=Math.max(best,run)});
+ const dots=[6,5,4,3,2,1,0].map(j=>{const d=dAgo(j),on=okd(dk(d));return `<div style="text-align:center;font-size:12px"><div style="width:28px;height:28px;border-radius:50%;margin:0 auto 4px;display:grid;place-items:center;${on?'background:var(--gold);color:#000;font-weight:700':'border:2px solid var(--line)'}">${on?'✓':''}</div>${DN[(d.getDay()+6)%7]}</div>`}).join('');
+ return `<div class="card"><div class="row" style="justify-content:space-between"><b>🔥 ${n}-day streak</b><span class="muted">Best ${best} · Total ${ks.length} days</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px">${dots}</div><div class="muted" style="margin-top:10px">${okd(dk())?'You did it today. Nice work.':'Finish a morning or night routine today to keep your streak going.'}</div></div>`}
+function psyT(){$('#screen').innerHTML=S.dt?det():'<h2>Psyche</h2>'+psy();if($('#lib'))lib()}
+function gbar(){const cur=+S.p.lb,g=+S.gw;
+ if(!(g>0&&cur>0))return `<div class="card row" style="justify-content:space-between" onclick="S.fs='c';draw()"><span>🎯 Set your goal weight</span><span class="muted">Calories ›</span></div>`;
+ const s=+S.sw||cur,done=s==g?1:Math.max(0,Math.min(1,(cur-s)/(g-s))),hit=(g>=s&&cur>=g)||(g<=s&&cur<=g);
+ return `<div class="card" onclick="goGw()"><div class="row" style="justify-content:space-between"><span>🎯 Goal <b>${g} lb</b></span><span class="muted">Now ${cur} lb · ${hit?'Goal reached!':Math.abs(cur-g).toFixed(1)+' lb to go'}</span></div><div class="bar"><i style="width:${done*100}%"></i></div></div>`}
+window.goGw=()=>{S.fs='c';draw();const el=document.getElementById('gwc');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})};
+window.goCal=()=>{S.fs='c';draw();const el=document.getElementById('tc');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})};
+function cbar(){const t=tgt(),e=S.log.reduce((a,x)=>a+x.c,0);
+ if(!t)return `<div class="card row" style="justify-content:space-between" onclick="S.fs='c';draw()"><span>🍽️ Set your calorie goal</span><span class="muted">Calories ›</span></div>`;
+ const l=t.c-e;
+ return `<div class="card" onclick="goCal()"><div class="row" style="justify-content:space-between"><span><b>${e}</b> eaten</span><span class="muted">${l>=0?l+' left':-l+' over'} · goal ${t.c}</span></div><div class="bar"><i style="width:${Math.min(100,e/t.c*100)}%;${l<0?'background:var(--down)':''}"></i></div></div>`}
+function fit(){const t=[['w','Workouts'],['c','Calories'],['p','Plan']];
+ $('#screen').innerHTML=`<div class="seg">${t.map(x=>`<button class="${S.fs==x[0]?'sel':''}" onclick="S.fs='${x[0]}';S.pm='';draw()">${x[1]}</button>`).join('')}</div>`+(S.fs=='w'?gbar()+cbar():'')+(S.pm&&S.fs=='w'?`<div class="card" style="border-color:var(--gold)">${esc(S.pm)}</div>`:'')+({w:wk,c:cal,p:plan}[S.fs])()}
+window.pv=()=>{const r=R[S.sel];S.note=r?`Time for ${r.name}!\n`+r.ex.map(x=>x.n+" "+x.s).join("\n"):"Rest day. Recover well.";draw()};
+const CT=[['All',0],['Fruit',/Apple|Banana|Orange|Strawberr|Blueberr|Grapes|Watermelon|Pineapple|Mango|Peach|Pear|Raisins|Avocado|Cherr|Kiwi|Melon/],['Veggies',/Broccoli|Carrots|Spinach|potato|Corn|Green beans|salad|Cucumber|Pepper|Onion|Tomato/i],['Protein',/Egg|Chicken (breast|thigh)|beef|steak|Salmon|Tuna|Shrimp|Pork|Bacon|Turkey|Tofu|Protein/],['Grains',/rice|Oatmeal|Pasta|Bread|Bagel|tortilla|Cereal|Pancakes|Waffle|Quinoa|Granola/],['Dairy',/yogurt|Milk|cheese|Cheddar|Mozzarella|Cottage|Butter|Ice cream/],['Fast food',/burger|fries|nuggets|Hot dog|burrito|Taco|Sub sandwich|Mac and|Fried chicken|Sushi|Ramen|Lasagna|Pizza|Wings|Fish sandwich/],['Snacks',/chips|Popcorn|Peanut|Almonds|Trail|Cookie|Brownie|Donut|Chocolate bar|Crackers|Pretzels|Hummus|Cashews|Candy|Cake/],['Drinks',/^Water|coffee|Latte|juice|Soda|Beer|Wine|drink|Smoothie|Chocolate milk|Tea/]];
+Object.assign(F,{'Cherries (1 cup)':87,'Kiwi':42,'Cantaloupe (1 cup)':54,'Cucumber (1 cup)':16,'Bell pepper':37,'Tomato':22,'Onion, medium':44,'Cauliflower (1 cup)':27,'Mushrooms (1 cup)':15,'Cashews (1 oz)':157,'Walnuts (1 oz)':185,'Chicken wings (6)':480,'Fish sandwich':390,'Cake slice':350,'Candy bar':250,'Green tea':2,'Chicken breast, cooked (1 breast)':284,'Lentils, cooked (1 cup)':230,'Black beans (1 cup)':227,'Rice cakes (2)':70,'Cream cheese (1 tbsp)':50,'String cheese':80,'Beef jerky (1 oz)':80,'Protein bar':210,'Egg sandwich':300,'Turkey sandwich':320,'Caesar salad':330,'Burrito bowl':650,'Pepperoni pizza slice':310,'Milkshake (16 oz)':600});
+const msg=t=>{S.lm=t;cam()};
+function cam(){
+ const q=S.food.toLowerCase(),fc=S.fc||'All',cr=(CT.find(c=>c[0]==fc)||[])[1];
+ const r=Object.keys(F).filter(k=>k.toLowerCase().includes(q)&&(!cr||cr.test(k))).slice(0,(q||cr)?60:10);
+ const sc=S.sc?`<div class="card" style="border-color:var(--gold)"><b>${esc(S.sc.n)}</b><div class="muted">${esc(S.sc.u)}: ${S.sc.c} cal</div><div class="row" style="justify-content:center;gap:14px;margin:8px 0"><button class="btn" style="width:auto;padding:6px 16px" onclick="qs(-.5)">−</button><b style="color:var(--gold)">${S.sc.q} × = ${Math.round(S.sc.c*S.sc.q)} cal</b><button class="btn" style="width:auto;padding:6px 16px" onclick="qs(.5)">＋</button></div><button class="btn" onclick="addS()">＋ Add to today</button></div>`:'';
+ $("#screen").innerHTML=`<h2>Scan food</h2>
+ <div class="vf"><b></b><b></b><b></b><b></b></div>
+ <button class="btn" onclick="scan()">Scan barcode</button>${S.lm?`<div class="card" style="border-color:var(--gold)">${esc(S.lm)}</div>`:''}${sc}
+ <div class="ex" style="margin-top:10px"><input id="bc" inputmode="numeric" placeholder="Or type the barcode number"><button class="btn" style="width:auto;padding:10px 14px" onclick="look($('#bc').value)">Look up</button></div>
+ <p class="muted">Or pick a category or type a food:</p>${cb(CT.map(c=>[c[0],c[0]]),k=>fc==k,k=>`S.fc='${k}';cam()`)}
+ <input id="fi" placeholder="Search a food, like banana" value="${S.food}" oninput="S.food=this.value;cam();$('#fi').focus();$('#fi').setSelectionRange(99,99)">
+ ${r.map(k=>`<div class="card row" style="justify-content:space-between"><div><b>${k}</b><div style="color:var(--gold);font-weight:700">${F[k]} cal</div></div><button class="btn" style="width:auto;padding:8px 14px" onclick="addF('${k}')">＋ Add</button></div>`).join("")||'<p class="muted">No match. Add it by hand on the Fitness > Calories screen.</p>'}
+ <p class="muted">${(q||cr?'':'Showing 10 popular foods. Pick a category or type to search. ')+'Calories are estimates.'}</p>`}
+const CP=n=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins[n];
+let _inst=0;
+window.scan=async()=>{
+ const P=CP('BarcodeScanner');
+ if(!P){msg('The barcode scanner works in the installed Android app. Type the barcode number or a food instead.');return}
+ try{
+  msg('Opening the scanner…');
+  let r;
+  try{r=await P.scan()}catch(e){
+   const m=String(e&&e.message||e);
+   if(/cancel/i.test(m)){msg('');return}
+   if(/module|install|available/i.test(m)){
+    msg('Downloading the scanner (one time, needs internet). It will open by itself when ready.');
+    if(!_inst){_inst=1;try{await P.addListener('googleBarcodeScannerModuleInstallProgress',x=>{if(x.state===4){_inst=0;scan()}else if(x.state===5){_inst=0;msg('The scanner download failed. Check your internet and tap Scan again, or type the barcode number.')}})}catch(_){}}
+    await P.installGoogleBarcodeScannerModule();return}
+   throw e}
+  if(!r||!r.barcodes||!r.barcodes.length){msg('No barcode was read. Try again, or type the number under the barcode.');return}
+  await look(r.barcodes[0].rawValue)
+ }catch(e){msg('Scanner problem: '+String(e&&e.message||e)+'. You can type the barcode number below.')}
+};
+window.look=async code=>{
+ code=String(code||'').replace(/\D/g,'');
+ if(code.length<6){msg('Type the full number printed under the barcode.');return}
+ msg('Looking up '+code+'…');
+ try{
+  const ids=[code];if(code.length==12)ids.push('0'+code);
+  let p=null;
+  for(const id of ids){
+   const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),10000);
+   const res=await fetch('https://world.openfoodfacts.org/api/v2/product/'+id+'.json?fields=product_name,brands,nutriments,serving_size,serving_quantity',{signal:ctl.signal});clearTimeout(t);
+   const j=await res.json();if(j.status===1&&j.product){p=j.product;break}}
+  if(!p){S.sc=null;msg('Barcode '+code+' is not in the food database. Type the food below or add the calories by hand.');return}
+  const n=p.nutriments||{};let c=+n['energy-kcal_serving'],u='per serving'+(p.serving_size?' ('+p.serving_size+')':'');
+  if(!(c>0)&&+n['energy-kcal_100g']>0){const sq=+p.serving_quantity;if(sq>0){c=n['energy-kcal_100g']*sq/100;u='per serving ('+(p.serving_size||sq+' g')+')'}else{c=+n['energy-kcal_100g'];u='per 100 g'}}
+  if(!(c>0)){S.sc=null;msg('No calorie info for this product. Type it in instead.');return}
+  S.sc={n:((p.brands?p.brands.split(',')[0].trim()+' ':'')+(p.product_name||'Scanned food')),c:Math.round(c),u,q:1};msg('Found it! Pick how many servings, then add.')
+ }catch(e){msg('Could not look that up. Check your internet connection and try again.')}
+};
+window.qs=d=>{if(S.sc){S.sc.q=Math.max(.5,Math.round((S.sc.q+d)*10)/10);cam()}};
+window.addS=()=>{if(!S.sc)return;const q=S.sc.q||1;S.log.push({n:S.sc.n+(q!=1?' ×'+q:''),c:Math.round(S.sc.c*q)});S.lm=S.sc.n+' added to today’s calories.';S.sc=null;cam()};
+/* Real notifications and alarms (installed app only) */
+async function sched(){
+ const N=CP('LocalNotifications');if(!N)return;
+ try{
+  let p=await N.checkPermissions();
+  if(p.display!=='granted'){p=await N.requestPermissions();if(p.display!=='granted')return}
+  const pend=await N.getPending();
+  if(pend.notifications.length)await N.cancel({notifications:pend.notifications.map(x=>({id:x.id}))});
+  const hm=t=>{const a=String(t||'07:00').split(':');return{hour:+a[0]||0,minute:+a[1]||0}},out=[];
+  R.forEach((r,i)=>{if(!r)return;const wd=((i+1)%7)+1;
+   out.push({id:10+wd,title:'Time for '+r.name+'!',body:r.ex.map(x=>x.n+' '+x.s).join(', ')||'Open Profitable Progress to start.',schedule:{on:Object.assign({weekday:wd},hm(S.rt)),allowWhileIdle:true}})});
+  if(S.ps&&S.aon&&S.am)out.push({id:1,title:'Good morning ☀️',body:'Your '+S.am+'-minute morning routine is ready.',schedule:{on:hm(S.at),allowWhileIdle:true}});
+  if(S.ps&&S.bon&&S.pm)out.push({id:2,title:'Time to wind down 🌙',body:'Your '+S.pm+'-minute night routine starts now, then lights out.',schedule:{on:hm(S.bt),allowWhileIdle:true}});
+  if(out.length)await N.schedule({notifications:out});
+ }catch(e){}
+}
+let schT;const rs=()=>{clearTimeout(schT);schT=setTimeout(sched,1500)};
+const SK='pp-v1';
+function save(){rs();try{const o=Object.assign({},S);localStorage.setItem(SK,JSON.stringify({S:o,R,day:dk()}))}catch(e){}}
+try{const d=JSON.parse(localStorage.getItem(SK)||'null');if(d){Object.assign(S,d.S);R.splice(0,7,...d.R);S.tab='fit';S.view=null;S.dt='';S.fs='w';S.edit=0;S.sel=(new Date().getDay()+6)%7;S.note='';S.pm='';S.an='';S.cn=0;S.lm='';S.sc=null;
+ if(d.day!==dk()){S.log=[];R.forEach(r=>r&&r.ex.forEach(x=>{x.d=0}))}}}catch(e){}
+document.addEventListener('input',()=>save());addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+draw();
+</script>
+</body></html>
